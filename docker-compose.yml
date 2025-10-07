@@ -3,7 +3,6 @@ version: "3.9"
 services:
   mongo:
     image: mongo:6
-    container_name: music-mongo
     ports:
       - "27017:27017"
     volumes:
@@ -13,9 +12,8 @@ services:
     build:
       context: ./backend
       target: development
-    container_name: music-backend
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -27,23 +25,6 @@ services:
       - CHOKIDAR_INTERVAL=1000
     depends_on:
       - mongo
-
-  frontend:
-    build:
-      context: ./frontend
-      target: development
-    container_name: music-frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
-    depends_on:
-      - backend
 
 volumes:
   mongo-data:
