@@ -10,17 +10,23 @@ services:
       - mongo-data:/data/db
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      target: production
     container_name: music-backend
     ports:
       - "5000:5000"
     env_file:
       - ./backend/.env
+    environment:
+      - NODE_ENV=production
     depends_on:
       - mongo
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: production
     container_name: music-frontend
     ports:
       - "3000:80"

@@ -1,8 +1,24 @@
-FROM node:18
+# ---------- Base stage ----------
+FROM node:18 AS base
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+
+# ---------- Development stage ----------
+FROM base AS development
+# Install nodemon globally for live reload
+RUN npm install -g nodemon
 COPY . .
+ENV NODE_ENV=development
+# Optional: helps nodemon detect file changes in Docker
+ENV CHOKIDAR_USEPOLLING=true
+EXPOSE 5000
+CMD ["nodemon", "server.js"]
+
+# ---------- Production stage ----------
+FROM base AS production
+COPY . .
+ENV NODE_ENV=production
+RUN npm prune --production
 EXPOSE 5000
 CMD ["node", "server.js"]
-

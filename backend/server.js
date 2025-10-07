@@ -15,6 +15,10 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Music Streaming App backend!');
 });
 
+app.get('/api/user', async (req, res) => {
+  const existingUser = await User.findOne({ email: 'test@example.com' });
+  res.json({ message: 'User found', user: existingUser.username });
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
