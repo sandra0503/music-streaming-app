@@ -13,7 +13,6 @@ app.use(express.json());
 
 connectDB();
 
-// Routes
 app.use("/api/auth", authRoutes);
 
 app.get("/api/protected", auth, (req, res) => {

@@ -1,24 +1,31 @@
-import { useState } from 'react';
 import AuthForm from './components/AuthForm';
-import { fetchProtected } from "./api";
+import { Button, Grommet, Header } from 'grommet';
+import { theme } from './theme';
+import { useAuth } from './hooks/useAuth';
 
 function App() {
-  const [token, setToken] = useState(null);
+  const { token, setToken } = useAuth();
 
+  const handleLogin = (t: string) => {
+    setToken(t);
+  };
+
+  const handleLogout = () => {
+    setToken(null);
+  };
 
   return (
-    <div>
-      <button onClick={fetchProtected}>Fetch Protected Data</button>
+    <Grommet theme={theme} full>
+      <Header
+        background="light-3"
+        pad={{ left: 'medium', right: 'small', vertical: 'small' }}
+      />
       {!token ? (
-        <AuthForm />
-
+        <AuthForm onLogin={handleLogin} />
       ) : (
-        <>
-          <h2>Logged in!</h2>
-          <button onClick={fetchProtected}>Fetch Protected Data</button>
-        </>
+        <Button label="Logout" onClick={handleLogout} />
       )}
-    </div>
+    </Grommet>
   );
 }
 
