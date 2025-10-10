@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/auth";
-import { auth } from "./middleware/auth";
+import ninaRoutes from "./routes/nina";
 
 dotenv.config();
 const app = express();
@@ -15,9 +15,7 @@ connectDB();
 
 app.use("/api/auth", authRoutes);
 
-app.get("/api/protected", auth, (req, res) => {
-  res.json({ msg: "This is a protected route" });
-});
+app.use("/api/nina", ninaRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

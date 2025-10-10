@@ -2,6 +2,7 @@ import AuthForm from './components/AuthForm';
 import { Button, Grommet, Header } from 'grommet';
 import { theme } from './theme';
 import { useAuth } from './hooks/useAuth';
+import MusicList from './components/MusicList';
 
 function App() {
   const { token, setToken } = useAuth();
@@ -23,7 +24,10 @@ function App() {
       {!token ? (
         <AuthForm onLogin={handleLogin} />
       ) : (
-        <Button label="Logout" onClick={handleLogout} />
+        <>
+          <MusicList />
+          <Button label="Logout" onClick={handleLogout} />
+        </>
       )}
     </Grommet>
   );

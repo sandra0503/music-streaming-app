@@ -2,7 +2,7 @@
 
 A full-stack **React + TypeScript + Node.js + MongoDB** music streaming demo app with **signup/login functionality**, designed for portfolio use. The app is a demo Spotify-like project that will eventually integrate **Nina Protocol music** and custom playlists.
 
-Further information on Nina can be found [here](https://www.ninaprotocol.com/).
+Further information on Nina can be found [here](https://dev.ninaprotocol.com/).
 
 ---
 
