@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Release } from '../../models/release';
 import { fetchNinaReleases } from '../../api';
-import { Box, Heading, Image } from 'grommet';
+import { Box, Card, Grid, Heading, Image, ResponsiveContext } from 'grommet';
 
 export default function MusicList() {
   const [releases, setReleases] = useState<Release[]>([]);
+  const [selectedReleases, setSelectedReleases] = useState<Release | null>(
+    null
+  );
+
+  const size = useContext(ResponsiveContext);
+
+  const isActive = (publicKey: string): boolean => {
+    return selectedReleases?.publicKey === publicKey;
+  };
 
   useEffect(() => {
     const fetchTracks = async () => {
@@ -15,20 +24,47 @@ export default function MusicList() {
   }, []);
 
   return (
-    <div>
-      <h2>Discover Music</h2>
+    <Grid
+      columns={size !== 'small' ? ['25%', '25%', '25%', '25%'] : ['100%']}
+      gap="small"
+    >
       {releases.map((release) => (
-        <Box height="small" width="small" key={release.publicKey}>
-          <Heading level={3} size="small">
-            {release.metadata.name}
-          </Heading>
+        <Card
+          fill
+          key={release.publicKey}
+          style={{ position: 'relative' }}
+          onClick={() => {
+            console.log('Clicked release', release.publicKey);
+            if (isActive(release.publicKey)) {
+              setSelectedReleases(null);
+            } else {
+              setSelectedReleases(release);
+            }
+          }}
+        >
+          <Box
+            pad="small"
+            background="light-2"
+            width={'100%'}
+            height={'100%'}
+            style={{
+              position: 'absolute',
+              opacity: 0.8,
+              visibility: isActive(release.publicKey) ? 'visible' : 'hidden',
+            }}
+          >
+            <Heading level={3} size="small">
+              {release.metadata.name}
+            </Heading>
+          </Box>
+
           <Image
             src={release.metadata.image}
             fit="contain"
             alt="release cover"
           />
-        </Box>
+        </Card>
       ))}
-    </div>
+    </Grid>
   );
 }

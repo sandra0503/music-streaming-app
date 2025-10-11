@@ -28,7 +28,7 @@ export interface ReleaseMetadata {
   external_url: string;
 }
 
-router.get("/discover", async (req: Request, res: Response) => {
+router.get("/discover", auth, async (req: Request, res: Response) => {
   const limit = req.query.limit || 10;
   const offset = req.query.offset || 0;
 
@@ -52,7 +52,7 @@ router.get("/discover", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/tags/:tag", async (req: Request, res: Response) => {
+router.get("/tags/:tag", auth, async (req: Request, res: Response) => {
   const { tag } = req.params;
   const limit = req.query.limit || 10;
   const offset = req.query.offset || 0;
