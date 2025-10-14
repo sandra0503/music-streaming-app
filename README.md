@@ -1,6 +1,6 @@
-# 🎵 Nina Music Streaming App (Portfolio MVP)
+# 🎵 Nina Music Streaming App (MVP)
 
-A full-stack **React + TypeScript + Node.js + MongoDB** music streaming demo app with **signup/login functionality**, designed for portfolio use. The app is a demo Spotify-like project that will eventually integrate **Nina Protocol music** and custom playlists.
+A full-stack **React + TypeScript + Node.js + MongoDB** music streaming demo app with **signup/login functionality**. The app is a demo Spotify-like project that will integrate **Nina Protocol music** and custom playlists.
 
 Further information on Nina can be found [here](https://dev.ninaprotocol.com/).
 
@@ -21,6 +21,14 @@ Further information on Nina can be found [here](https://dev.ninaprotocol.com/).
 - JWT authentication & protected routes (`/api/protected`)
 - TypeScript support for frontend & backend
 - Dockerized development environment
+- Fetching music from nina protocol
+- Playback of tracks
+
+---
+
+## 👀 Screenshot
+
+<img width="321" height="687" alt="Bildschirmfoto 2025-10-14 um 23 31 37" src="https://github.com/user-attachments/assets/8086d2a6-8c41-467f-b36a-15da70319d88" />
 
 ---
 
@@ -100,7 +108,7 @@ Open [http://localhost:3000](http://localhost:3000) and test signup/login.
 
 ## 🔮 Next Steps (Planned)
 
-- Integrate **Nina Protocol** for streaming music
+- Extend backend to query **Nina Protocol** with tags
 - Add **custom playlists** stored in MongoDB
 - Make frontend **PWA installable**
 - Deploy full stack via **Docker + cloud hosting**
