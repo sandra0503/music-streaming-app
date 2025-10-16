@@ -26,9 +26,9 @@ Further information on Nina can be found [here](https://dev.ninaprotocol.com/).
 
 ---
 
-## 👀 Screenshot
+## 👀 Preview
 
-<img width="321" height="687" alt="Bildschirmfoto 2025-10-14 um 23 31 37" src="https://github.com/user-attachments/assets/8086d2a6-8c41-467f-b36a-15da70319d88" />
+https://www.mymusicapp.online/
 
 ---
 
