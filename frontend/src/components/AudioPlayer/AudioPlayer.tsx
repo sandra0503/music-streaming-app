@@ -5,8 +5,8 @@ import { Anchor, Box, Button, Heading, RangeInput } from 'grommet';
 import { Next, Pause, Play, Previous } from 'grommet-icons';
 
 const PlayBackControlsSkeleton = memo(() => (
-  <Box direction="column" margin="medium">
-    <Heading level={4} margin="none" color="text-weak">
+  <Box>
+    <Heading level={4} margin="small" color="text-weak">
       No track selected
     </Heading>
 
@@ -94,6 +94,8 @@ const PlayBackControls: React.FC = () => {
         margin="none"
         truncate
         title={`${title} - ${trackName}`}
+        fill
+        style={{ height: '100%' }}
       >
         {title} — {trackName}
       </Heading>

@@ -2,13 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { fetchNinaReleases } from '../api';
 import { Release } from '../models/release';
 
-export function useReleases(query: string) {
+export function useReleases(query: string, token: string | null) {
   const [releases, setReleases] = useState<Release[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const isFirstRender = useRef(true);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-  const token = localStorage.getItem('token');
 
   // initial load
   useEffect(() => {
@@ -17,8 +16,8 @@ export function useReleases(query: string) {
 
     (async () => {
       try {
-        const data = await fetchNinaReleases('');
-        if (isMounted) setReleases(data);
+        const data = await fetchNinaReleases('', token);
+        if (isMounted) setReleases([...data]);
       } catch (err) {
         console.error('Initial fetch failed', err);
         if (isMounted) setError('Failed to load releases');
@@ -33,6 +32,8 @@ export function useReleases(query: string) {
 
   // query changes
   useEffect(() => {
+    if (!token) return;
+
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -44,8 +45,8 @@ export function useReleases(query: string) {
     debounceTimer.current = setTimeout(async () => {
       setLoading(true);
       try {
-        const data = await fetchNinaReleases(query);
-        if (isMounted) setReleases(data);
+        const data = await fetchNinaReleases(query, token);
+        if (isMounted) setReleases([...data]);
       } catch (err) {
         console.error('Query fetch failed', err);
         if (isMounted) setError('Failed to load releases');
@@ -58,7 +59,7 @@ export function useReleases(query: string) {
       isMounted = false;
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
     };
-  }, [query]);
+  }, [query, token]);
 
   return { releases, loading, error };
 }

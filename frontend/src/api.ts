@@ -37,9 +37,17 @@ export const signup = (payload: { email: string; password: string }) =>
 export const login = (payload: { email: string; password: string }) =>
   api.post<LoginResponse>('/auth/login', payload);
 
-export async function fetchNinaReleases(query: string): Promise<Release[]> {
+export async function fetchNinaReleases(
+  query: string,
+  token: string
+): Promise<Release[]> {
   const result = await api
-    .get(`/nina/discover?limit=30`, { params: { query } })
+    .get(`/nina/discover?limit=50`, {
+      params: { query },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     .catch((err) => {
       console.error('API error:', err);
     });

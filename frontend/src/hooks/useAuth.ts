@@ -2,17 +2,21 @@ import { useEffect, useState } from 'react';
 import { setAuthToken } from '../api';
 
 export function useAuth() {
-  const [token, setToken] = useState<string | null>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('token') : null
-  );
+  const initialToken =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  // Immediately set token in API
+  if (initialToken) setAuthToken(initialToken);
+
+  const [token, setToken] = useState<string | null>(initialToken);
 
   useEffect(() => {
     if (token) {
-      localStorage.setItem('token', token);
       setAuthToken(token);
+      localStorage.setItem('token', token);
     } else {
-      localStorage.removeItem('token');
       setAuthToken(null);
+      localStorage.removeItem('token');
     }
   }, [token]);
 

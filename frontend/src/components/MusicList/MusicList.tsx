@@ -6,12 +6,12 @@ import { useReleases } from '../../hooks/useReleases';
 import FilterBar from '../FilterBar';
 import ReleaseCard from '../ReleaseCard';
 
-export default function MusicList() {
+export default function MusicList({ token }: { token: string | null }) {
   const { setCurrentRelease, setPlaylist, chooseTrack, currentTrack } =
     usePlayer();
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
   const [query, setQuery] = useState('');
-  const { releases, loading, error } = useReleases(query);
+  const { releases, loading, error } = useReleases(query, token);
   const size = useContext(ResponsiveContext);
 
   const getTrackId = useCallback(

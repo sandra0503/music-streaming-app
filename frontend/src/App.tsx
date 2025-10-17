@@ -1,10 +1,11 @@
 import AuthForm from './components/AuthForm';
-import { Anchor, Box, Footer, Grommet, Header, Menu, Paragraph } from 'grommet';
+import { Anchor, Box, Footer, Grommet, Paragraph } from 'grommet';
 import { theme } from './theme';
 import { useAuth } from './hooks/useAuth';
 import MusicList from './components/MusicList';
 import AudioPlayer from './components/AudioPlayer';
 import { PlayerProvider } from './contexts/PlayerContext';
+import AppHeader from './components/AppHeader';
 
 function App() {
   const { token, setToken } = useAuth();
@@ -25,37 +26,9 @@ function App() {
             <AuthForm onLogin={handleLogin} />
           ) : (
             <>
-              <Header
-                background="light-3"
-                justify="between"
-                pad={{ left: 'medium', right: 'small', vertical: 'small' }}
-              >
-                <Paragraph margin="xsmall" size="small">
-                  <Anchor
-                    label="Luma"
-                    href="/"
-                    size="large"
-                    style={{
-                      textDecoration: 'none',
-                      fontWeight: 'bold',
-                    }}
-                  />{' '}
-                  __ Discover Releases
-                </Paragraph>
-                <Menu
-                  aira-label="Menu"
-                  items={[
-                    {
-                      label: 'Logout',
-                      onClick: () => {
-                        handleLogout();
-                      },
-                    },
-                  ]}
-                />
-              </Header>
+              <AppHeader onLogout={handleLogout} />
               <Box tag="main" fill>
-                <MusicList />
+                <MusicList token={token} />
                 <AudioPlayer />
               </Box>
             </>
