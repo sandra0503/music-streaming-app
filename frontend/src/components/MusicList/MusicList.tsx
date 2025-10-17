@@ -1,20 +1,10 @@
 import { useContext, useCallback, useState } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  Grid,
-  Heading,
-  Image,
-  Paragraph,
-  ResponsiveContext,
-  Spinner,
-  Text,
-} from 'grommet';
+import { Box, Grid, ResponsiveContext, Spinner, Text } from 'grommet';
 import { Release, File as ReleaseFile } from '../../models/release';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { useReleases } from '../../hooks/useReleases';
 import FilterBar from '../FilterBar';
+import ReleaseCard from '../ReleaseCard';
 
 export default function MusicList() {
   const { setCurrentRelease, setPlaylist, chooseTrack, currentTrack } =
@@ -55,7 +45,7 @@ export default function MusicList() {
       setPlaylist(playlist);
       chooseTrack(playlist[0]);
     },
-    [chooseTrack, setPlaylist, getTrackId]
+    [chooseTrack, setCurrentRelease, setPlaylist, getTrackId]
   );
 
   if (loading) {
@@ -93,60 +83,16 @@ export default function MusicList() {
           columns={size !== 'small' ? ['1fr', '1fr', '1fr', '1fr'] : ['100%']}
           gap="small"
         >
-          {releases.map((release) => {
-            const active = isActive(release.publicKey);
-            const playing = isPlayingFromRelease(release);
-            return (
-              <Card
-                key={release.publicKey}
-                fill
-                role="button"
-                hoverIndicator
-                onClick={() => setSelectedRelease(active ? null : release)}
-                style={{ position: 'relative', cursor: 'pointer' }}
-              >
-                <Box
-                  pad="medium"
-                  background="light-2"
-                  width="100%"
-                  height="100%"
-                  style={{
-                    position: 'absolute',
-                    opacity: active ? 0.9 : 0,
-                    pointerEvents: active ? 'auto' : 'none',
-                    transition: 'opacity 0.2s ease-in-out',
-                  }}
-                >
-                  <Button
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handlePlayRelease(release);
-                    }}
-                    disabled={playing}
-                    label={playing ? 'Playing' : 'Play'}
-                    primary
-                    size="small"
-                    alignSelf="start"
-                    margin={{ vertical: 'small' }}
-                  />
-                  <Heading level={3} size="small" margin="none">
-                    {release.metadata.name}
-                  </Heading>
-                  <Box overflow="auto" margin={{ top: 'xsmall' }}>
-                    <Paragraph size="small">
-                      {release.metadata.description}
-                    </Paragraph>
-                  </Box>
-                </Box>
-
-                <Image
-                  src={release.metadata.image}
-                  fit="cover"
-                  alt={`${release.metadata.name} cover art`}
-                />
-              </Card>
-            );
-          })}
+          {releases.map((release) => (
+            <ReleaseCard
+              key={release.publicKey}
+              release={release}
+              isActive={isActive(release.publicKey)}
+              isPlaying={isPlayingFromRelease(release)}
+              onSelect={setSelectedRelease}
+              onPlay={handlePlayRelease}
+            />
+          ))}
         </Grid>
       </Box>
     </Box>
