@@ -8,10 +8,13 @@ export function useReleases(query: string) {
   const [error, setError] = useState<string | null>(null);
   const isFirstRender = useRef(true);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const token = localStorage.getItem('token');
 
   // initial load
   useEffect(() => {
     let isMounted = true;
+    if (!token) return;
+
     (async () => {
       try {
         const data = await fetchNinaReleases('');
@@ -26,7 +29,7 @@ export function useReleases(query: string) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [token]);
 
   // query changes
   useEffect(() => {

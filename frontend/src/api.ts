@@ -39,7 +39,7 @@ export const login = (payload: { email: string; password: string }) =>
 
 export async function fetchNinaReleases(query: string): Promise<Release[]> {
   const result = await api
-    .get(`/nina/discover?limit=50`, { params: { query } })
+    .get(`/nina/discover?limit=30`, { params: { query } })
     .catch((err) => {
       console.error('API error:', err);
     });
