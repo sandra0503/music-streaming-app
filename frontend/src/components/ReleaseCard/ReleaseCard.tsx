@@ -36,7 +36,7 @@ export default function ReleaseCard({
       role="button"
       hoverIndicator
       onClick={handleClick}
-      style={{ position: 'relative', cursor: 'pointer' }}
+      style={{ position: 'relative', cursor: 'pointer', minWidth: '10rem' }}
     >
       {/* Overlay */}
       <Box
@@ -60,7 +60,11 @@ export default function ReleaseCard({
           alignSelf="start"
           margin={{ vertical: 'small' }}
         />
-        <Heading level={3} size="small" margin="none">
+        <Heading
+          level={3}
+          margin="none"
+          style={{ fontSize: '1rem', lineHeight: '1.5rem' }}
+        >
           {release.metadata.name}
         </Heading>
         <Box overflow="auto" margin={{ top: 'xsmall' }}>

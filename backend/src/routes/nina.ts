@@ -51,6 +51,30 @@ router.get("/discover", auth, async (req: Request, res: Response) => {
   }
 });
 
+router.get("/picks", auth, async (req: Request, res: Response) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 10;
+    const offset = parseInt(req.query.offset as string) || 0;
+    const query = (req.query.query as string) || "";
+
+    const querySearch =
+      query.length > 0 ? `&query=${encodeURIComponent(query)}` : "";
+
+    const endpoint = `${URL_V1}/hubs/ninas-picks/releases?limit=${limit}&offset=${offset}&sort=desc${querySearch}`;
+
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error("Error fetching releases:", err);
+    return res.status(500).json({ error: "Failed to fetch releases" });
+  }
+});
+
 router.get("/tags/:tag", auth, async (req: Request, res: Response) => {
   const { tag } = req.params;
   const limit = req.query.limit || 10;

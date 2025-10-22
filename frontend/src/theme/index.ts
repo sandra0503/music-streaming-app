@@ -8,12 +8,9 @@ export const theme: ThemeType = {
         light: '#7c7b7bff',
       },
     },
-    size: {
-      controlsHeight: '90px',
-    },
     font: {
       family: 'Roboto',
-      size: '18px',
+      size: '16px',
       height: '20px',
     },
   },
@@ -24,6 +21,9 @@ export const theme: ThemeType = {
     extend: `
       font-weight: 500;
     `,
+  },
+  checkBox: {
+    size: '16px',
   },
   tab: {
     color: 'text-weak',

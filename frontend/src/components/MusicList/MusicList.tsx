@@ -11,7 +11,12 @@ export default function MusicList({ token }: { token: string | null }) {
     usePlayer();
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
   const [query, setQuery] = useState('');
-  const { releases, loading, error } = useReleases(query, token);
+  const [staffPicksEnabled, setStaffPicksEnabled] = useState(false);
+  const { releases, loading, error } = useReleases(
+    query,
+    staffPicksEnabled,
+    token
+  );
   const size = useContext(ResponsiveContext);
 
   const getTrackId = useCallback(
@@ -50,9 +55,17 @@ export default function MusicList({ token }: { token: string | null }) {
 
   if (loading) {
     return (
-      <Box align="center" justify="center" pad="large" fill>
-        <Spinner />
-        <Text margin={{ top: 'small' }}>Loading releases...</Text>
+      <Box fill>
+        <FilterBar
+          onSearch={setQuery}
+          onToggleStaffPicks={setStaffPicksEnabled}
+          initialQuery={query}
+          initialStaffPicks={staffPicksEnabled}
+        />
+        <Box fill align="center" justify="center" pad="large">
+          <Spinner />
+          <Text margin={{ top: 'small' }}>Loading releases...</Text>
+        </Box>
       </Box>
     );
   }
@@ -67,7 +80,12 @@ export default function MusicList({ token }: { token: string | null }) {
 
   return (
     <Box fill>
-      <FilterBar onSearch={setQuery} initialQuery={query} />
+      <FilterBar
+        onSearch={setQuery}
+        onToggleStaffPicks={setStaffPicksEnabled}
+        initialQuery={query}
+        initialStaffPicks={staffPicksEnabled}
+      />
       <Box
         fill
         overflow="auto"
@@ -81,6 +99,7 @@ export default function MusicList({ token }: { token: string | null }) {
         ) : null}
         <Grid
           columns={size !== 'small' ? ['1fr', '1fr', '1fr', '1fr'] : ['100%']}
+          pad={{ horizontal: 'xlarge' }}
           gap="small"
         >
           {releases.map((release) => (

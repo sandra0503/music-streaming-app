@@ -5,8 +5,8 @@ import { Anchor, Box, Button, Heading, RangeInput } from 'grommet';
 import { Next, Pause, Play, Previous } from 'grommet-icons';
 
 const PlayBackControlsSkeleton = memo(() => (
-  <Box>
-    <Heading level={4} margin="small" color="text-weak">
+  <Box margin="medium" gap="small">
+    <Heading level={4} margin="none" color="text-weak">
       No track selected
     </Heading>
 
@@ -88,7 +88,7 @@ const PlayBackControls: React.FC = () => {
     : 'No track selected';
 
   return (
-    <Box direction="column" margin="medium">
+    <Box margin="medium" gap="small">
       <Heading
         level={4}
         margin="none"
@@ -131,16 +131,14 @@ const PlayBackControls: React.FC = () => {
         />
       </Box>
 
-      {currentRelease?.metadata?.external_url && (
-        <Anchor
-          label="Collect"
-          href={currentRelease.metadata.external_url}
-          size="small"
-          style={{ textDecoration: 'none', fontWeight: 'bold' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        />
-      )}
+      <Anchor
+        label="Collect"
+        href={'https://www.ninaprotocol.com/releases/' + currentRelease?.slug}
+        size="small"
+        style={{ textDecoration: 'none', fontWeight: 'bold' }}
+        target="_blank"
+        disabled={!currentRelease?.slug}
+      />
     </Box>
   );
 };
@@ -152,9 +150,7 @@ const AudioPlayer: React.FC = () => {
 
   return (
     <Audio playlist={playlist}>
-      <Box className="audio-player">
-        <PlayBackControls />
-      </Box>
+      <PlayBackControls />
     </Audio>
   );
 };

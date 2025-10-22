@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { fetchNinaReleases } from '../api';
+import { fetchNinaReleases, fetchNinaStaffPickReleases } from '../api';
 import { Release } from '../models/release';
 
-export function useReleases(query: string, token: string | null) {
+export function useReleases(
+  query: string,
+  staffPicksEnabled: boolean,
+  token: string | null
+) {
   const [releases, setReleases] = useState<Release[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +34,7 @@ export function useReleases(query: string, token: string | null) {
     };
   }, [token]);
 
-  // query changes
+  // query or mode changes
   useEffect(() => {
     if (!token) return;
 
@@ -45,7 +49,9 @@ export function useReleases(query: string, token: string | null) {
     debounceTimer.current = setTimeout(async () => {
       setLoading(true);
       try {
-        const data = await fetchNinaReleases(query, token);
+        const data = staffPicksEnabled
+          ? await fetchNinaStaffPickReleases(query, token)
+          : await fetchNinaReleases(query, token);
         if (isMounted) setReleases([...data]);
       } catch (err) {
         console.error('Query fetch failed', err);
@@ -59,7 +65,7 @@ export function useReleases(query: string, token: string | null) {
       isMounted = false;
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
     };
-  }, [query, token]);
+  }, [query, staffPicksEnabled, token]);
 
   return { releases, loading, error };
 }

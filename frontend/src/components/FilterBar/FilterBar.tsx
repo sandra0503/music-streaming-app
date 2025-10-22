@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
-import { Box, TextInput, Button } from 'grommet';
-import { Search, Bookmark } from 'grommet-icons';
+import React, { useContext, useState } from 'react';
+import { Box, TextInput, Button, CheckBox, ResponsiveContext } from 'grommet';
+import { Search, Bookmark, Filter } from 'grommet-icons';
 
 type FilterBarProps = {
   onSearch?: (query: string) => void;
-  onToggleBookmarks?: (onlyBookmarks: boolean) => void;
+  onToggleStaffPicks?: (staffPicksEnabled: boolean) => void;
   initialQuery?: string;
+  initialStaffPicks?: boolean;
 };
 
 const FilterBar: React.FC<FilterBarProps> = ({
   onSearch,
-  onToggleBookmarks,
+  onToggleStaffPicks,
   initialQuery = '',
+  initialStaffPicks = false,
 }: FilterBarProps) => {
   const [query, setQuery] = useState(initialQuery);
-  const [onlyBookmarks, setOnlyBookmarks] = useState(false);
+  const [staffPicksEnabled, setStaffPicksEnabled] = useState(initialStaffPicks);
+  const size = useContext(ResponsiveContext);
 
   const handleSearch = () => {
     onSearch?.(query.trim());
@@ -24,45 +27,42 @@ const FilterBar: React.FC<FilterBarProps> = ({
     if (e.key === 'Enter') handleSearch();
   };
 
-  const toggleBookmarks = () => {
-    const next = !onlyBookmarks;
-    setOnlyBookmarks(next);
-    onToggleBookmarks?.(next);
+  const toggleStaffPicks = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = e.target.checked;
+    setStaffPicksEnabled(isChecked);
+    onToggleStaffPicks?.(e.target.checked);
   };
 
   return (
     <Box
       justify="end"
+      direction={size !== 'small' ? 'row' : 'column'}
+      style={{ minHeight: 'auto', gap: '0.5rem' }}
       pad="medium"
-      style={{ flexDirection: 'row', gap: '8px', alignItems: 'center' }}
+      gap="1 rem"
     >
-      <Button
-        size="small"
-        secondary={true}
-        hoverIndicator="light-1"
-        icon={
-          onlyBookmarks ? (
-            <Bookmark color="brand" />
-          ) : (
-            <Bookmark color="dark-3" />
-          )
-        }
-        aria-label="Only bookmarks"
-        aria-pressed={onlyBookmarks}
-        onClick={toggleBookmarks}
-      />
-      <Box width="auto">
+      <Box direction="row" style={{ gap: '0.5rem', alignItems: 'center' }}>
         <TextInput
           icon={<Search size="20" />}
-          size="small"
+          size="xsmall"
           value={query}
           onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
           onKeyDown={handleKeyDown}
           placeholder={'Search by genre'}
+          style={{ fontSize: '1rem', minWidth: '3rem' }}
         />
+        <Button label="Search" size="small" onClick={handleSearch} />
       </Box>
 
-      <Button label="Search" size="small" onClick={handleSearch} />
+      <CheckBox
+        checked={staffPicksEnabled}
+        label="Staff picks"
+        onChange={(e) => toggleStaffPicks(e)}
+        size={10}
+        style={{
+          alignSelf: 'end',
+        }}
+      />
     </Box>
   );
 };

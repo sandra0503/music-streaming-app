@@ -54,4 +54,21 @@ export async function fetchNinaReleases(
   return result?.data.releases || [];
 }
 
+export async function fetchNinaStaffPickReleases(
+  query: string,
+  token: string
+): Promise<Release[]> {
+  const result = await api
+    .get(`/nina/picks?limit=50`, {
+      params: { query },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch((err) => {
+      console.error('API error:', err);
+    });
+  return result?.data.releases || [];
+}
+
 export default api;
