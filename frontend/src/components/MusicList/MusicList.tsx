@@ -99,8 +99,9 @@ export default function MusicList({ token }: { token: string | null }) {
         ) : null}
         <Grid
           columns={size !== 'small' ? ['1fr', '1fr', '1fr', '1fr'] : ['100%']}
-          pad={{ horizontal: 'xlarge' }}
+          pad={{ horizontal: 'large' }}
           gap="small"
+          fill="horizontal"
         >
           {releases.map((release) => (
             <ReleaseCard

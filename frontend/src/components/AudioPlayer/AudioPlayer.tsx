@@ -2,12 +2,18 @@ import { useCallback, useEffect, useRef, memo } from 'react';
 import { Audio, AudioTrack, useAudio } from '@sina_byn/re-audio';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { Anchor, Box, Button, Heading, RangeInput } from 'grommet';
-import { Next, Pause, Play, Previous } from 'grommet-icons';
+import { Money, Next, Pause, Play, Previous, StarOutline } from 'grommet-icons';
 
 const PlayBackControlsSkeleton = memo(() => (
   <Box margin="medium" gap="small">
-    <Heading level={4} margin="none" color="text-weak">
-      No track selected
+    <Heading
+      level={4}
+      margin="none"
+      color="text-weak"
+      fill
+      style={{ minHeight: '1.5rem' }}
+    >
+      No release selected
     </Heading>
 
     <Box direction="row" align="center" gap="small">
@@ -23,12 +29,22 @@ const PlayBackControlsSkeleton = memo(() => (
       <Button icon={<Next />} disabled />
     </Box>
 
-    <Anchor
-      label="Collect"
-      size="small"
-      style={{ textDecoration: 'none', fontWeight: 'bold' }}
-      disabled
-    />
+    <Box direction="row" gap="large" margin={{ top: 'medium' }}>
+      <Anchor
+        label="Collect"
+        size="small"
+        style={{ textDecoration: 'none', fontWeight: 'bold' }}
+        icon={<Money />}
+        disabled
+      />
+      <Anchor
+        label="Like"
+        size="small"
+        style={{ textDecoration: 'none', fontWeight: 'bold' }}
+        icon={<StarOutline />}
+        disabled
+      />
+    </Box>
   </Box>
 ));
 PlayBackControlsSkeleton.displayName = 'PlayBackControlsSkeleton';
@@ -93,9 +109,8 @@ const PlayBackControls: React.FC = () => {
         level={4}
         margin="none"
         truncate
-        title={`${title} - ${trackName}`}
         fill
-        style={{ height: '100%' }}
+        style={{ minHeight: '1.5rem' }}
       >
         {title} — {trackName}
       </Heading>
@@ -130,15 +145,25 @@ const PlayBackControls: React.FC = () => {
           icon={<Next />}
         />
       </Box>
-
-      <Anchor
-        label="Collect"
-        href={'https://www.ninaprotocol.com/releases/' + currentRelease?.slug}
-        size="small"
-        style={{ textDecoration: 'none', fontWeight: 'bold' }}
-        target="_blank"
-        disabled={!currentRelease?.slug}
-      />
+      <Box direction="row" gap="large" margin={{ top: 'medium' }}>
+        <Anchor
+          label="Collect"
+          href={'https://www.ninaprotocol.com/releases/' + currentRelease?.slug}
+          size="small"
+          style={{ textDecoration: 'none', fontWeight: 'bold' }}
+          icon={<Money />}
+          target="_blank"
+          disabled={!currentRelease?.slug}
+        />
+        <Anchor
+          label="Like"
+          size="small"
+          style={{ textDecoration: 'none', fontWeight: 'bold' }}
+          icon={<StarOutline />}
+          target="_blank"
+          disabled={!currentRelease?.slug}
+        />
+      </Box>
     </Box>
   );
 };

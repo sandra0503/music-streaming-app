@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Box, Button, Card, Heading, Image, Paragraph } from 'grommet';
 import { Release } from '../../models/release';
+import { Play } from 'grommet-icons';
 
 type ReleaseCardProps = {
   release: Release;
@@ -52,13 +53,14 @@ export default function ReleaseCard({
         }}
       >
         <Button
+          icon={<Play size="16" />}
           onClick={handlePlayClick}
           disabled={isPlaying}
           label={isPlaying ? 'Playing' : 'Play'}
           primary
           size="small"
-          alignSelf="start"
-          margin={{ vertical: 'small' }}
+          alignSelf="end"
+          margin={{ bottom: 'small' }}
         />
         <Heading
           level={3}
@@ -68,7 +70,9 @@ export default function ReleaseCard({
           {release.metadata.name}
         </Heading>
         <Box overflow="auto" margin={{ top: 'xsmall' }}>
-          <Paragraph size="small">{release.metadata.description}</Paragraph>
+          <Paragraph size="small" margin="0">
+            {release.metadata.description}
+          </Paragraph>
         </Box>
       </Box>
 

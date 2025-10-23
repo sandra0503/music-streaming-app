@@ -1,4 +1,5 @@
 import { ThemeType } from 'grommet';
+import { Menu } from 'grommet-icons';
 
 export const theme: ThemeType = {
   global: {
@@ -12,6 +13,10 @@ export const theme: ThemeType = {
       family: 'Roboto',
       size: '16px',
       height: '20px',
+    },
+    size: {
+      headerHeight: '52px',
+      footerHeight: '140px',
     },
   },
   anchor: {
@@ -45,6 +50,23 @@ export const theme: ThemeType = {
       hover: {
         color: 'brand',
       },
+    },
+  },
+  menu: {
+    background: 'brand',
+    container: {
+      pad: 'medium',
+      gap: 'medium',
+      width: '50vw',
+      elevation: 'small',
+    },
+    icons: {
+      down: Menu,
+      up: Menu,
+    },
+    item: {
+      color: 'white',
+      style: { fontWeight: 'bold' },
     },
   },
 };
