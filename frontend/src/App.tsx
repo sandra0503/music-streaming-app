@@ -36,7 +36,7 @@ function App() {
               </Box>
             </>
           )}
-          <Footer justify="end">
+          <Footer justify="end" style={{ marginTop: '-1rem' }}>
             <Paragraph size="small" margin="xsmall">
               Powered by{' '}
               <Anchor
