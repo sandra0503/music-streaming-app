@@ -6,12 +6,17 @@ import MusicList from './components/MusicList';
 import AudioPlayer from './components/AudioPlayer';
 import { PlayerProvider } from './contexts/PlayerContext';
 import AppHeader from './components/AppHeader';
+import { Route, Routes } from 'react-router';
+import FavouritesList from './components/FavouritesList';
+import { useState } from 'react';
 
 function App() {
   const { token, setToken } = useAuth();
+  const [favouriteKeys, setFavouriteKeys] = useState<string[]>([]);
 
-  const handleLogin = (t: string) => {
+  const handleLogin = (t: string, favourites: string[]) => {
     setToken(t);
+    setFavouriteKeys(favourites);
   };
 
   const handleLogout = () => {
@@ -31,8 +36,14 @@ function App() {
                 style={{ height: 'headerHeight' }}
               />
               <Box tag="main" fill>
-                <MusicList token={token} />
-                <AudioPlayer />
+                <Routes>
+                  <Route index element={<MusicList token={token} />} />
+                  <Route
+                    path="favourites"
+                    element={<FavouritesList token={token} />}
+                  />
+                </Routes>
+                <AudioPlayer favourites={favouriteKeys} />
               </Box>
             </>
           )}

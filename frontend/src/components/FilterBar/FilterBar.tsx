@@ -56,7 +56,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
       <CheckBox
         checked={staffPicksEnabled}
-        label="Staff picks"
+        label="Nina's staff picks"
         onChange={(e) => toggleStaffPicks(e)}
         size={10}
         style={{

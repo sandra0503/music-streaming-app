@@ -1,56 +1,27 @@
-import { useContext, useCallback, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Box, Grid, ResponsiveContext, Spinner, Text } from 'grommet';
-import { Release, File as ReleaseFile } from '../../models/release';
-import { usePlayer } from '../../contexts/PlayerContext';
+import { Release } from '../../models/release';
 import { useReleases } from '../../hooks/useReleases';
 import FilterBar from '../FilterBar';
 import ReleaseCard from '../ReleaseCard';
+import { useReleasePlayback } from '../../hooks/useReleasePlayback';
 
 export default function MusicList({ token }: { token: string | null }) {
-  const { setCurrentRelease, setPlaylist, chooseTrack, currentTrack } =
-    usePlayer();
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
   const [query, setQuery] = useState('');
   const [staffPicksEnabled, setStaffPicksEnabled] = useState(false);
+
   const { releases, loading, error } = useReleases(
     query,
     staffPicksEnabled,
     token
   );
+
   const size = useContext(ResponsiveContext);
 
-  const getTrackId = useCallback(
-    (release: Release, file: ReleaseFile) =>
-      `${release.publicKey}-${file.track}`,
-    []
-  );
-
-  const isActive = useCallback(
-    (publicKey: string) => selectedRelease?.publicKey === publicKey,
-    [selectedRelease]
-  );
-
-  const isPlayingFromRelease = useCallback(
-    (release: Release) =>
-      !!currentTrack &&
-      release.metadata.properties.files.some(
-        (f) => getTrackId(release, f) === currentTrack.id
-      ),
-    [currentTrack, getTrackId]
-  );
-
-  const handlePlayRelease = useCallback(
-    (release: Release) => {
-      const playlist = release.metadata.properties.files.map((file) => ({
-        id: getTrackId(release, file),
-        name: file.track_title,
-        src: file.uri,
-      }));
-      setCurrentRelease(release);
-      setPlaylist(playlist);
-      chooseTrack(playlist[0]);
-    },
-    [chooseTrack, setCurrentRelease, setPlaylist, getTrackId]
+  const { isActive, isPlayingFromRelease, playRelease } = useReleasePlayback(
+    selectedRelease,
+    setSelectedRelease
   );
 
   if (loading) {
@@ -72,7 +43,7 @@ export default function MusicList({ token }: { token: string | null }) {
 
   if (error) {
     return (
-      <Box align="center" justify="center" pad="large" fill>
+      <Box fill align="center" justify="center" pad="large">
         <Text color="status-critical">{error}</Text>
       </Box>
     );
@@ -86,20 +57,21 @@ export default function MusicList({ token }: { token: string | null }) {
         initialQuery={query}
         initialStaffPicks={staffPicksEnabled}
       />
+
       <Box
         fill
         overflow="auto"
         pad={{ vertical: 'small', horizontal: 'large' }}
         align="center"
       >
-        {releases.length === 0 ? (
-          <Box align="center" justify="center" pad="large" fill>
+        {releases.length === 0 && (
+          <Box align="center" justify="center" pad="large">
             <Text>No releases found.</Text>
           </Box>
-        ) : null}
+        )}
+
         <Grid
           columns={size !== 'small' ? ['1fr', '1fr', '1fr', '1fr'] : ['100%']}
-          pad={{ horizontal: 'large' }}
           gap="small"
           fill="horizontal"
         >
@@ -110,7 +82,7 @@ export default function MusicList({ token }: { token: string | null }) {
               isActive={isActive(release.publicKey)}
               isPlaying={isPlayingFromRelease(release)}
               onSelect={setSelectedRelease}
-              onPlay={handlePlayRelease}
+              onPlay={playRelease}
             />
           ))}
         </Grid>

@@ -10,6 +10,7 @@ const api: AxiosInstance = axios.create({
 export interface LoginResponse {
   token: string;
   username?: string;
+  favourites: string[];
 }
 
 export interface SignupResponse {
@@ -37,12 +38,13 @@ export const signup = (payload: { email: string; password: string }) =>
 export const login = (payload: { email: string; password: string }) =>
   api.post<LoginResponse>('/auth/login', payload);
 
+// Discover page
 export async function fetchNinaReleases(
   query: string,
   token: string
 ): Promise<Release[]> {
   const result = await api
-    .get(`/nina/discover?limit=50`, {
+    .get(`/discover?limit=50`, {
       params: { query },
       headers: {
         Authorization: `Bearer ${token}`,
@@ -59,7 +61,7 @@ export async function fetchNinaStaffPickReleases(
   token: string
 ): Promise<Release[]> {
   const result = await api
-    .get(`/nina/picks?limit=50`, {
+    .get(`/discover/picks?limit=50`, {
       params: { query },
       headers: {
         Authorization: `Bearer ${token}`,
@@ -69,6 +71,39 @@ export async function fetchNinaStaffPickReleases(
       console.error('API error:', err);
     });
   return result?.data.releases || [];
+}
+
+// Audio player
+export async function markAsFavourite(releaseId: string): Promise<void> {
+  const result = await api
+    .post(`/favourites/add?key=${releaseId}`)
+    .catch((err) => {
+      console.error('API error:', err);
+    });
+  return result?.data.favourites || [];
+}
+
+export async function removeFavourite(releaseId: string): Promise<void> {
+  const result = await api
+    .post(`/favourites/remove?key=${releaseId}`)
+    .catch((err) => {
+      console.error('API error:', err);
+    });
+  return result?.data.favourites || [];
+}
+
+// Favourites page
+export async function fetchFavourites(token: string): Promise<Release[]> {
+  const result = await api
+    .get(`/favourites`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch((err) => {
+      console.error('API error:', err);
+    });
+  return result?.data.favourites || [];
 }
 
 export default api;

@@ -1,6 +1,7 @@
 import { Anchor, Header, Menu, Paragraph } from 'grommet';
 import { Music, Power, Star, StarOutline } from 'grommet-icons';
 import React from 'react';
+import { useNavigate } from 'react-router';
 
 type AppHeaderProps = {
   onLogout: () => void;
@@ -13,6 +14,8 @@ const AppHeader: React.FC<
       HTMLDivElement
     >
 > = ({ onLogout, ...props }: AppHeaderProps) => {
+  const navigate = useNavigate();
+
   return (
     <Header
       background="light-3"
@@ -39,11 +42,17 @@ const AppHeader: React.FC<
             label: 'Discover',
             icon: <Music size="20" />,
             gap: 'medium',
+            onClick: () => {
+              navigate('/', { replace: true });
+            },
           },
           {
-            label: 'My selection',
+            label: 'Favourites',
             icon: <StarOutline size="20" />,
             gap: 'medium',
+            onClick: () => {
+              navigate('/favourites', { replace: true });
+            },
           },
           {
             label: 'Logout',

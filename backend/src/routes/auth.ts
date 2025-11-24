@@ -36,7 +36,9 @@ router.post("/login", async (req: Request, res: Response) => {
       { expiresIn: "1h" }
     );
 
-    res.json({ token, email: user.email });
+    const favourites = user.favourites.map((f) => f.releasePublicKey);
+
+    res.json({ token, email: user.email, favourites });
   } catch (err: any) {
     res.status(500).json({ msg: err.message });
   }

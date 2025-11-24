@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { login, signup } from '../../api';
 
 type AuthFormProps = {
-  onLogin: (token: string) => void;
+  onLogin: (token: string, favourites: string[]) => void;
 };
 
 function AuthForm({ onLogin }: AuthFormProps) {
@@ -21,7 +21,7 @@ function AuthForm({ onLogin }: AuthFormProps) {
         const res = await login({ email, password });
         const token = res.data.token;
         if (!token) throw new Error('No token returned');
-        onLogin(token);
+        onLogin(token, res.data.favourites);
       } else {
         await signup({ email, password });
         setIsLogin(true);

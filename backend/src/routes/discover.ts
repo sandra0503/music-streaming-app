@@ -1,33 +1,12 @@
 import express, { Request, Response } from "express";
 import { auth } from "../middleware/auth";
+import { Release } from "../models/release";
 
 const router = express.Router();
 
 const URL_V1 = "https://services.ninaprotocol.com/v1";
 
-export interface Release {
-  publicKey: string;
-  mint: string;
-  metadata: ReleaseMetadata;
-  datetime: string;
-  slug: string;
-  price: string;
-  paymentMint: string;
-  archived: boolean;
-  publishedThroughHub: string;
-  publisher: string;
-}
-
-export interface ReleaseMetadata {
-  name: string;
-  symbol: string;
-  description: string;
-  seller_fee_basis_points: number;
-  image: string;
-  animation_url: string;
-  external_url: string;
-}
-router.get("/discover", auth, async (req: Request, res: Response) => {
+router.get("/", auth, async (req: Request, res: Response) => {
   try {
     const limit = parseInt(req.query.limit as string) || 10;
     const offset = parseInt(req.query.offset as string) || 0;

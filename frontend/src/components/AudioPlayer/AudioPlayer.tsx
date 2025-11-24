@@ -1,8 +1,17 @@
-import { useCallback, useEffect, useRef, memo } from 'react';
+import { useCallback, useEffect, useRef, memo, useState } from 'react';
 import { Audio, AudioTrack, useAudio } from '@sina_byn/re-audio';
 import { usePlayer } from '../../contexts/PlayerContext';
 import { Anchor, Box, Button, Heading, RangeInput } from 'grommet';
-import { Money, Next, Pause, Play, Previous, StarOutline } from 'grommet-icons';
+import {
+  Money,
+  Next,
+  Pause,
+  Play,
+  Previous,
+  Star,
+  StarOutline,
+} from 'grommet-icons';
+import { markAsFavourite } from '../../api';
 
 const PlayBackControlsSkeleton = memo(() => (
   <Box margin="medium" gap="small">
@@ -31,17 +40,18 @@ const PlayBackControlsSkeleton = memo(() => (
 
     <Box direction="row" gap="large" margin={{ top: 'medium' }}>
       <Anchor
+        label="Mark as favourite"
+        size="small"
+        style={{ textDecoration: 'none', fontWeight: 'bold' }}
+        icon={<StarOutline />}
+        target="_blank"
+        disabled
+      />
+      <Anchor
         label="Collect"
         size="small"
         style={{ textDecoration: 'none', fontWeight: 'bold' }}
         icon={<Money />}
-        disabled
-      />
-      <Anchor
-        label="Like"
-        size="small"
-        style={{ textDecoration: 'none', fontWeight: 'bold' }}
-        icon={<StarOutline />}
         disabled
       />
     </Box>
@@ -49,8 +59,12 @@ const PlayBackControlsSkeleton = memo(() => (
 ));
 PlayBackControlsSkeleton.displayName = 'PlayBackControlsSkeleton';
 
-const PlayBackControls: React.FC = () => {
+const PlayBackControls: React.FC<{ favourites: string[] }> = ({
+  favourites,
+}) => {
   const lastTrackRef = useRef<AudioTrack | null>(null);
+  const [isFavouriteButtonLoading, setFavouriteButtonLoading] = useState(false);
+  const [favouriteKeys, setFavouriteKeys] = useState(favourites);
 
   const {
     currentTrack,
@@ -103,6 +117,28 @@ const PlayBackControls: React.FC = () => {
     ? getTrackName(playerTrack.id)
     : 'No track selected';
 
+  const handleMarkFavourite = async () => {
+    if (!currentRelease?.publicKey) return;
+
+    setFavouriteButtonLoading(true);
+
+    try {
+      await markAsFavourite(currentRelease.publicKey);
+      setFavouriteKeys([...favouriteKeys, currentRelease.publicKey]);
+    } catch (err) {
+      console.error(
+        'Failed to mark as favourite',
+        currentRelease.publicKey,
+        err
+      );
+    } finally {
+      setFavouriteButtonLoading(false);
+    }
+  };
+
+  const isFavourite =
+    currentRelease && favouriteKeys.includes(currentRelease?.publicKey);
+
   return (
     <Box margin="medium" gap="small">
       <Heading
@@ -147,6 +183,15 @@ const PlayBackControls: React.FC = () => {
       </Box>
       <Box direction="row" gap="large" margin={{ top: 'medium' }}>
         <Anchor
+          label={isFavourite ? 'Favourite' : 'Mark as favourite'}
+          size="small"
+          style={{ textDecoration: 'none', fontWeight: 'bold' }}
+          icon={isFavourite ? <Star /> : <StarOutline />}
+          target="_blank"
+          disabled={!currentRelease?.slug || isFavouriteButtonLoading}
+          onClick={handleMarkFavourite}
+        />
+        <Anchor
           label="Collect"
           href={'https://www.ninaprotocol.com/releases/' + currentRelease?.slug}
           size="small"
@@ -155,27 +200,19 @@ const PlayBackControls: React.FC = () => {
           target="_blank"
           disabled={!currentRelease?.slug}
         />
-        <Anchor
-          label="Like"
-          size="small"
-          style={{ textDecoration: 'none', fontWeight: 'bold' }}
-          icon={<StarOutline />}
-          target="_blank"
-          disabled={!currentRelease?.slug}
-        />
       </Box>
     </Box>
   );
 };
 
-const AudioPlayer: React.FC = () => {
+const AudioPlayer: React.FC<{ favourites: string[] }> = ({ favourites }) => {
   const { playlist } = usePlayer();
 
   if (!playlist?.length) return <PlayBackControlsSkeleton />;
 
   return (
     <Audio playlist={playlist}>
-      <PlayBackControls />
+      <PlayBackControls favourites={favourites} />
     </Audio>
   );
 };

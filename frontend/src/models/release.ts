@@ -11,6 +11,7 @@ export interface Release {
   hub: Hub;
   publisher: string;
   publisherAccount: PublisherAccount;
+  addedAt?: Date;
 }
 
 export interface ReleaseMetadata {

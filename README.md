@@ -23,6 +23,7 @@ Further information on Nina can be found [here](https://dev.ninaprotocol.com/).
 - Dockerized development environment
 - Fetching music from nina protocol
 - Playback of tracks
+- Favourite releases page
 
 ---
 
